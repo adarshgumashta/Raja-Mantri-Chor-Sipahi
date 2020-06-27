@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Raja Mantri Chor Sipahi</string>
+    <string name="action_settings">Settings</string>
+    <string name="banner_ad_unit_id">ca-app-pub-8861549201942078/4762968346</string>
+    <string name="next_chance">Next Chance</string>
+    <string name="winner">Winner</string>
+    <string name="info">Info</string>
+    <string name="share">Share</string>
+    <string name="moreApps">More Apps</string>
+    <string name="Click_on_Next_Chance_or_Winner">Click on Next Chance or Winner</string>
+    <string name="Please_Complete_first_Chance">Please Complete first Chance</string>
+    <string name="Please_Click_on_Shuffle">Please Click on Shuffle</string>
+    <string name="_will_find_the_Chor"> will find the Chor!</string>
+    <string name="Guess">Guess</string>
+    <string name="Submit">Submit</string>
+    <string name="Whose_Turn"> \'s Turn</string>
+    <string name="Click_on_Guess">Click on Guess !</string>
+    <string name="Press_Again_To_Exit">Press Again To Exit !</string>
+    <string name="Shuffle">Shuffle</string>
+    <string name="Click_Again_To_Close_Chit">Click Again To Close Chit ! </string>
+    <string name="shuffle">Shuffle</string>
+    <string name="player1">Player1</string>
+    <string name="player2">Player2</string>
+    <string name="player3">Player3</string>
+    <string name="player4">Player4</string>
+    <string name="enter_player_names">Enter Player Names</string>
+
+</resources>

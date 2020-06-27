@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <item
+        android:id="@+id/next_chance"
+        android:icon="@drawable/nex"
+        android:title="@string/next_chance" />
+
+    <item
+        android:id="@+id/winner"
+        android:icon="@drawable/troph"
+        android:title="@string/winner" />
+
+    <item
+        android:id="@+id/info"
+        android:icon="@drawable/inf"
+        android:title="@string/info" />
+
+    <item
+        android:id="@+id/share"
+        android:icon="@drawable/shar"
+        android:title="@string/share" />
+    <item
+        android:id="@+id/moreApps"
+        android:icon="@drawable/ic_more_black_24dp"
+        android:title="@string/moreApps" />
+</menu>
