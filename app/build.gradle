@@ -7,7 +7,7 @@ android {
         applicationId "com.chit.adarsh.rajamantrichorsipahi"
         minSdkVersion 14
         targetSdkVersion 29
-        versionCode 9
+        versionCode 10
         versionName "1.0"
     }
     buildTypes {
@@ -21,8 +21,8 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.gms:play-services-ads:11.0.4'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
 }
