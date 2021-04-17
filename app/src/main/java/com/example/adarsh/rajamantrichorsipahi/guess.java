@@ -27,7 +27,6 @@ import java.util.Random;
 
 public class guess extends AppCompatActivity implements Animation.AnimationListener {
 
-    String s;
     int chit, rate = 0, chance = 0, i = 0, x, g, l = 0;
     int[] urimages = new int[4];
     int[] score1array = new int[50];
@@ -44,7 +43,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
     ArrayList<Integer> randomList = new ArrayList<>();
     ImageView img0, img1, img2, img3;
     private boolean doubleBackToExitPressedOnce = false;
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
@@ -105,7 +104,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                         scorefour.setText(val4);
 
                         if (chance == 0) {
-                            toa.setText(R.string.Please_Complete_first_Chance);
+                            toa.setText(R.string.please_complete_first_chance);
                             toa.setVisibility(View.VISIBLE);
                             toa.startAnimation(slideleft);
                         }
@@ -156,7 +155,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                     }
                     return true;
                 case R.id.info:
-                    Intent intent = new Intent(guess.this, info.class);
+                    Intent intent = new Intent(guess.this, InfoActivity.class);
                     startActivity(intent);
                     return true;
                 case R.id.share:
@@ -231,8 +230,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
         img3.setImageResource(R.drawable.podopen);
         img3_path = "/podopen.png";
 
-        Button btnrdm = (Button) ButtonRandom;
-        String content = btnrdm.getText().toString();
+        String content = ButtonRandom.getText().toString();
         final String on = content;
         Typeface custom_font = Typeface.createFromAsset(getAssets(), "fonts/xenippa1.ttf");
         tbb1.setTypeface(custom_font);
@@ -243,7 +241,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
         name2.setTypeface(custom_font);
         name3.setTypeface(custom_font);
         name4.setTypeface(custom_font);
-        btnrdm.setTypeface(custom_font);
+        ButtonRandom.setTypeface(custom_font);
         Intent inte = getIntent();
         String ed1 = inte.getStringExtra("edittext1");
         String ed2 = inte.getStringExtra("edittext2");
@@ -265,11 +263,11 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                         Guess(on);
 
                     else if (chance == 0) {
-                        toa.setText(R.string.Please_Complete_first_Chance);
+                        toa.setText(R.string.please_complete_first_chance);
                         toa.setVisibility(View.VISIBLE);
                         toa.startAnimation(slideleft);
                     } else
-                        toa.setText(R.string.Click_on_Next_Chance_or_Winner);
+                        toa.setText(R.string.click_on_next_chance_or_winner);
                     toa.setVisibility(View.VISIBLE);
                     toa.startAnimation(slideleft);
                 }
@@ -280,7 +278,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
             @Override
             public void onClick(View v) {
                 if (rate == 0) {
-                    toa.setText(R.string.Please_Click_on_Shuffle);
+                    toa.setText(R.string.please_click_on_shuffle);
                     toa.setVisibility(View.VISIBLE);
                     toa.startAnimation(slideleft);
                 }
@@ -307,7 +305,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                     }
                 } else if (p0 == 2 && img0_path.equals("/podtlhalf.png")) {
                     Toast.makeText(getApplicationContext(), "Your Guess is Right", Toast.LENGTH_SHORT).show();
-                    toa.setText(R.string.Click_on_Next_Chance_or_Winner);
+                    toa.setText(R.string.click_on_next_chance_or_winner);
                     toa.setVisibility(View.VISIBLE);
                     toa.startAnimation(slideleft);
                     chit = 0;
@@ -338,7 +336,6 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                                     break;
                             }
                         }
-
                         if (p3 == 1) {
                             switch (k3) {
                                 case 1:
@@ -397,7 +394,6 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                         img2_path = "/three.png";
                     }
 
-
                     if (p3 == 3) {
                         if (p1 == 1) {
                             switch (k1) {
@@ -452,7 +448,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                     g = g + 1;
                 } else if (p0 == 3 && img0_path.equals("/podtlhalf.png")) {
                     Toast.makeText(getApplicationContext(), "Your Guess is Wrong", Toast.LENGTH_SHORT).show();
-                    toa.setText(R.string.Click_on_Next_Chance_or_Winner);
+                    toa.setText(R.string.click_on_next_chance_or_winner);
                     toa.setVisibility(View.VISIBLE);
                     toa.startAnimation(slideleft);
                     chit = 0;
@@ -485,8 +481,6 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                         }
                         img1.setImageResource(R.drawable.two);
                         img1_path = "/two.png";
-
-
                     }
                     if (p2 == 2) {
                         switch (k2) {
@@ -505,8 +499,6 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                         }
                         img2.setImageResource(R.drawable.two);
                         img2_path = "/two.png";
-
-
                     }
                     if (p3 == 2) {
                         switch (k3) {
@@ -569,10 +561,8 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                     }
                     if (img0_path.equals("/one.png"))
                         p0 = 1;
-
                     if (img0_path.equals("/two.png"))
                         p0 = 2;
-
                     if (img0_path.equals("/three.png")) {
                         p0 = 3;
                         switch (i) {
@@ -636,7 +626,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
             @Override
             public void onClick(View v) {
                 if (rate == 0) {
-                    toa.setText(R.string.Please_Click_on_Shuffle);
+                    toa.setText(R.string.please_click_on_shuffle);
                     toa.setVisibility(View.VISIBLE);
                     toa.startAnimation(slideleft);
                 }
@@ -663,7 +653,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                     }
                 } else if (p1 == 2 && img1_path.equals("/podtrhalf.png")) {
                     Toast.makeText(getApplicationContext(), "Your Guess is Right", Toast.LENGTH_SHORT).show();
-                    toa.setText(R.string.Click_on_Next_Chance_or_Winner);
+                    toa.setText(R.string.click_on_next_chance_or_winner);
                     toa.setVisibility(View.VISIBLE);
                     toa.startAnimation(slideleft);
                     chit = 0;
@@ -755,7 +745,6 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                         img2_path = "/three.png";
                     }
 
-
                     if (p3 == 3) {
                         if (p2 == 1) {
                             switch (k2) {
@@ -810,7 +799,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                     g = g + 1;
                 } else if (p1 == 3 && img1_path.equals("/podtrhalf.png")) {
                     Toast.makeText(getApplicationContext(), "Your Guess is Wrong", Toast.LENGTH_SHORT).show();
-                    toa.setText(R.string.Click_on_Next_Chance_or_Winner);
+                    toa.setText(R.string.click_on_next_chance_or_winner);
                     toa.setVisibility(View.VISIBLE);
                     toa.startAnimation(slideleft);
                     chit = 0;
@@ -994,7 +983,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
             @Override
             public void onClick(View v) {
                 if (rate == 0) {
-                    toa.setText(R.string.Please_Click_on_Shuffle);
+                    toa.setText(R.string.please_click_on_shuffle);
                     toa.setVisibility(View.VISIBLE);
                     toa.startAnimation(slideleft);
                 }
@@ -1021,7 +1010,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                     }
                 } else if (p2 == 2 && img2_path.equals("/podblhalf.png")) {
                     Toast.makeText(getApplicationContext(), "Your Guess is Right", Toast.LENGTH_SHORT).show();
-                    toa.setText(R.string.Click_on_Next_Chance_or_Winner);
+                    toa.setText(R.string.click_on_next_chance_or_winner);
                     toa.setVisibility(View.VISIBLE);
                     toa.startAnimation(slideleft);
                     chit = 0;
@@ -1168,7 +1157,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                     g = g + 1;
                 } else if (p2 == 3 && img2_path.equals("/podblhalf.png")) {
                     Toast.makeText(getApplicationContext(), "Your Guess is Wrong", Toast.LENGTH_SHORT).show();
-                    toa.setText(R.string.Click_on_Next_Chance_or_Winner);
+                    toa.setText(R.string.click_on_next_chance_or_winner);
                     toa.setVisibility(View.VISIBLE);
                     toa.startAnimation(slideleft);
                     chit = 0;
@@ -1351,13 +1340,13 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
             @Override
             public void onClick(View v) {
                 if (rate == 0) {
-                    toa.setText(R.string.Please_Click_on_Shuffle);
+                    toa.setText(R.string.please_click_on_shuffle);
                     toa.setVisibility(View.VISIBLE);
                     toa.startAnimation(slideleft);
                 }
                 imageno = 3;
 
-                if (click == 1)
+                if (click == 9)
                     Click_Again_To_Close_Chit();
 
                 else if (n3 == 1) {
@@ -1377,7 +1366,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                     }
                 } else if (p3 == 2 && img3_path.equals("/podbrhalf.png")) {
                     Toast.makeText(getApplicationContext(), "Your Guess is Right", Toast.LENGTH_SHORT).show();
-                    toa.setText(R.string.Click_on_Next_Chance_or_Winner);
+                    toa.setText(R.string.click_on_next_chance_or_winner);
                     toa.setVisibility(View.VISIBLE);
                     toa.startAnimation(slideleft);
                     chit = 0;
@@ -1523,7 +1512,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                     g = g + 1;
                 } else if (p3 == 3 && img3_path.equals("/podbrhalf.png")) {
                     Toast.makeText(getApplicationContext(), "Your Guess is Wrong", Toast.LENGTH_SHORT).show();
-                    toa.setText(R.string.Click_on_Next_Chance_or_Winner);
+                    toa.setText(R.string.click_on_next_chance_or_winner);
                     toa.setVisibility(View.VISIBLE);
                     toa.startAnimation(slideleft);
                     name1.setText("");
@@ -1689,7 +1678,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                                     click = 0;
                                     chit = 1;
                                 }
-                            }, 1500);
+                            }, 15000);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -1767,7 +1756,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                 scorefour.setText(val4);
 
                 if (chance == 0) {
-                    toa.setText(R.string.Please_Complete_first_Chance);
+                    toa.setText(R.string.please_complete_first_chance);
                     toa.setVisibility(View.VISIBLE);
                     toa.startAnimation(slideleft);
                 }
@@ -1823,6 +1812,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
             }
         });*/
     }
+
 
     void Set_Images_of_Raja_Mantri_Chor_Sipahi(int x, int imgno) {
 
@@ -1916,9 +1906,8 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
         }
     }
 
-
     void Click_Again_To_Close_Chit() {
-        toa.setText(R.string.Click_Again_To_Close_Chit);
+        toa.setText(R.string.click_again_to_close_chit);
         toa.setVisibility(View.VISIBLE);
         toa.startAnimation(slideleft);
     }
@@ -2101,19 +2090,19 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
     void whose_turn_it_is(int i) {
         switch (i) {
             case 0:
-                toa.setText(tbb1.getText().toString().concat(getString(R.string.Whose_Turn)));
+                toa.setText(tbb1.getText().toString().concat(getString(R.string.whose_turn)));
                 break;
             case 1:
-                toa.setText(tbb2.getText().toString().concat(getString(R.string.Whose_Turn)));
+                toa.setText(tbb2.getText().toString().concat(getString(R.string.whose_turn)));
                 break;
             case 2:
-                toa.setText(tbb3.getText().toString().concat(getString(R.string.Whose_Turn)));
+                toa.setText(tbb3.getText().toString().concat(getString(R.string.whose_turn)));
                 break;
             case 3:
-                toa.setText(tbb4.getText().toString().concat(getString(R.string.Whose_Turn)));
+                toa.setText(tbb4.getText().toString().concat(getString(R.string.whose_turn)));
                 break;
             case 4:
-                toa.setText(R.string.Click_on_Guess);
+                toa.setText(R.string.click_on_guess);
                 break;
         }
         toa.setVisibility(View.VISIBLE);
@@ -2129,7 +2118,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
         }
 
         this.doubleBackToExitPressedOnce = true;
-        toa.setText(R.string.Press_Again_To_Exit);
+        toa.setText(R.string.press_again_to_exit);
         toa.setVisibility(View.VISIBLE);
         toa.startAnimation(slideleft);
 

@@ -18,7 +18,7 @@
         android:weightSum="6.0">
 
         <TextView
-            android:id="@+id/tv"
+            android:id="@+id/enterPlayerName"
             android:layout_marginTop="125dp"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
@@ -30,7 +30,7 @@
 
         <EditText
 
-            android:id="@+id/edittext1"
+            android:id="@+id/firstPerson"
             android:layout_width="200dp"
             android:layout_height="0dp"
             android:layout_weight="1.0"
@@ -43,7 +43,7 @@
 
         <EditText
 
-            android:id="@+id/edittext2"
+            android:id="@+id/secondPerson"
             android:layout_width="200dp"
             android:layout_height="0dp"
             android:layout_weight="1.0"
@@ -56,7 +56,7 @@
 
         <EditText
 
-            android:id="@+id/edittext3"
+            android:id="@+id/thirdPerson"
             android:layout_width="200dp"
             android:layout_height="0dp"
             android:layout_weight="1.0"
@@ -69,7 +69,7 @@
 
         <EditText
 
-            android:id="@+id/edittext4"
+            android:id="@+id/fourthPerson"
             android:layout_width="200dp"
             android:layout_height="0dp"
             android:layout_weight="1.0"
@@ -80,8 +80,8 @@
             android:text="@string/player4"
             android:textColor="#ffd85656" />
 
-        <Button
-            android:id="@+id/button"
+        <submitButton
+            android:id="@+id/submitButton"
             android:layout_width="119dp"
             android:layout_height="0dp"
             android:layout_weight="1.0"
@@ -96,13 +96,12 @@
 -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/redbackground">
 
     <TextView
-        android:id="@+id/tv"
+        android:id="@+id/enterPlayerName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1.0"
@@ -118,7 +117,7 @@
 
     <EditText
 
-        android:id="@+id/edittext1"
+        android:id="@+id/firstPerson"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_weight="1.0"
@@ -127,15 +126,15 @@
         android:inputType="textPersonName"
         android:text="@string/player1"
         android:textColor="#ffd85656"
-        app:layout_constraintBottom_toTopOf="@+id/edittext2"
+        app:layout_constraintBottom_toTopOf="@+id/secondPerson"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv" />
+        app:layout_constraintTop_toBottomOf="@+id/enterPlayerName" />
 
     <EditText
 
-        android:id="@+id/edittext2"
+        android:id="@+id/secondPerson"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_weight="1.0"
@@ -144,15 +143,15 @@
         android:inputType="textPersonName"
         android:text="@string/player2"
         android:textColor="#ffd85656"
-        app:layout_constraintBottom_toTopOf="@+id/edittext3"
+        app:layout_constraintBottom_toTopOf="@+id/thirdPerson"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edittext1" />
+        app:layout_constraintTop_toBottomOf="@+id/firstPerson" />
 
     <EditText
 
-        android:id="@+id/edittext3"
+        android:id="@+id/thirdPerson"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_weight="1.0"
@@ -161,15 +160,15 @@
         android:inputType="textPersonName"
         android:text="@string/player3"
         android:textColor="#ffd85656"
-        app:layout_constraintBottom_toTopOf="@+id/edittext4"
+        app:layout_constraintBottom_toTopOf="@+id/fourthPerson"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edittext2" />
+        app:layout_constraintTop_toBottomOf="@+id/secondPerson" />
 
     <EditText
 
-        android:id="@+id/edittext4"
+        android:id="@+id/fourthPerson"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
         android:layout_weight="1.0"
@@ -178,14 +177,14 @@
         android:inputType="textPersonName"
         android:text="@string/player4"
         android:textColor="#ffd85656"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/submitButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edittext3" />
+        app:layout_constraintTop_toBottomOf="@+id/thirdPerson" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/submitButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1.0"
@@ -198,5 +197,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edittext4" />
+        app:layout_constraintTop_toBottomOf="@+id/fourthPerson" />
 </androidx.constraintlayout.widget.ConstraintLayout>
