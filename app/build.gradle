@@ -13,10 +13,7 @@ android {
         versionName "1.0"
     }
     productFlavors {
-        oneproductFlavour {
-            resValue "string","clevertap_account_id" , "YourAccountID"
-            resValue "string","clevertap_account_token" , "YourAccountToken"
-        }
+
     }
     buildTypes {
         release {
