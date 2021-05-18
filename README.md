@@ -1,2 +1,2 @@
 # Raja-Mantri-Chor-Sipahi
-A Famous Chit Indian Game .
+A Famous Chit Game played in India .
