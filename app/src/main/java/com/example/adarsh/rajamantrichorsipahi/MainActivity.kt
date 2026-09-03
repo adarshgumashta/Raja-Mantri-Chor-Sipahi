@@ -10,7 +10,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
-class MainActivity : AppCompatActivity(), View.OnClickListener {
+class MainActivity :
+    AppCompatActivity(),
+    View.OnClickListener {
     private lateinit var firstPerson: EditText
     private lateinit var secondPerson: EditText
     private lateinit var thirdPerson: EditText
@@ -22,7 +24,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initializeViews();
+        initializeViews()
     }
 
     private fun initializeViews() {
@@ -33,8 +35,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         enterPlayerNameTV = findViewById(R.id.enterPlayerName)
         submitButton = findViewById(R.id.submitButton)
         decorView = window.decorView
-        val uiOptions = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE)
+        val uiOptions = (
+            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE
+            )
         decorView.systemUiVisibility = uiOptions
         customFont = Typeface.createFromAsset(assets, "fonts/xenippa1.ttf")
         setCustomFont(customFont)
@@ -60,32 +64,40 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 firstPerson.setText("")
                 firstPerson.isCursorVisible = true
             }
+
             R.id.secondPerson -> {
                 secondPerson.setText("")
                 secondPerson.isCursorVisible = true
             }
+
             R.id.thirdPerson -> {
                 thirdPerson.setText("")
                 thirdPerson.isCursorVisible = true
             }
+
             R.id.fourthPerson -> {
                 fourthPerson.setText("")
                 fourthPerson.isCursorVisible = true
             }
+
             R.id.submitButton -> {
                 when {
                     firstPerson.text.isEmpty() -> {
                         showToast("Enter Player 1 Name")
                     }
+
                     secondPerson.text.isEmpty() -> {
                         showToast("Enter Player 2 Name")
                     }
+
                     thirdPerson.text.isEmpty() -> {
                         showToast("Enter Player 3 Name")
                     }
+
                     fourthPerson.text.isEmpty() -> {
                         showToast("Enter Player 4 Name")
                     }
+
                     else -> {
                         val intent = Intent(this@MainActivity, GameActivity::class.java).apply {
                             putExtra("firstPerson", firstPerson.text.toString())

@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -14,12 +15,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationBarView;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -43,13 +46,13 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
     ArrayList<Integer> randomList = new ArrayList<>();
     ImageView img0, img1, img2, img3;
     private boolean doubleBackToExitPressedOnce = false;
-    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+    private final NavigationBarView.OnItemSelectedListener mOnNavigationItemSelectedListener
+            = new NavigationBarView.OnItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.next_chance:
+            int itemId = item.getItemId();
+            if (itemId == R.id.next_chance) {
                     if (disabled != 0) {
                         randomList.clear();
                         urimages = null;
@@ -77,7 +80,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                         n0 = n1 = n2 = n3 = 0;
                     }
                     return true;
-                case R.id.winner:
+            } else if (itemId == R.id.winner) {
                     if (isExit) {
                         Toast.makeText(getApplicationContext(), "Game is over .Please Exit !", Toast.LENGTH_SHORT).show();
                     }
@@ -154,11 +157,11 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                             Toast.makeText(getApplicationContext(), tbb3.getText() + " & " + tbb4.getText() + " are Winners:) .Please Exit !", Toast.LENGTH_SHORT).show();
                     }
                     return true;
-                case R.id.info:
+            } else if (itemId == R.id.info) {
                     Intent intent = new Intent(guess.this, InfoActivity.class);
                     startActivity(intent);
                     return true;
-                case R.id.share:
+            } else if (itemId == R.id.share) {
                     Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                     sharingIntent.setType("text/plain");
                     String shareBody = "https://play.google.com/store/apps/details?id=com.chit.adarsh.rajamantrichorsipahi";
@@ -166,7 +169,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
                     startActivity(Intent.createChooser(sharingIntent, "Share via"));
                     return true;
-                case R.id.moreApps:
+            } else if (itemId == R.id.moreApps) {
                     Intent intent1 = new Intent(Intent.ACTION_VIEW);
                     intent1.setData(Uri.parse("market://search?q=pub:adarshgumashta"));
                     startActivity(intent1);
@@ -190,13 +193,19 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.guess1);
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                handleBackPress();
+            }
+        });
         View decorView = getWindow().getDecorView();
         AdView mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setOnItemSelectedListener(mOnNavigationItemSelectedListener);
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE;
         decorView.setSystemUiVisibility(uiOptions);
@@ -584,7 +593,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                         //  await Task.Delay(1500);
 
                         try {
-                            new Handler().postDelayed(new Runnable() {
+                            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     //Your process to do
@@ -941,7 +950,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                         //  await Task.Delay(1500);
 
                         try {
-                            new Handler().postDelayed(new Runnable() {
+                            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     //Your process to do
@@ -1298,7 +1307,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                         //  await Task.Delay(1500);
 
                         try {
-                            new Handler().postDelayed(new Runnable() {
+                            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     //Your process to do
@@ -1652,7 +1661,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
                         //  await Task.Delay(1500);
 
                         try {
-                            new Handler().postDelayed(new Runnable() {
+                            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
                                     //Your process to do
@@ -2109,7 +2118,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
         toa.startAnimation(slideleft);
     }
 
-    public void onBackPressed() {
+    private void handleBackPress() {
         if (doubleBackToExitPressedOnce) {
             finish();
             moveTaskToBack(true);
@@ -2122,7 +2131,7 @@ public class guess extends AppCompatActivity implements Animation.AnimationListe
         toa.setVisibility(View.VISIBLE);
         toa.startAnimation(slideleft);
 
-        new Handler().postDelayed(new Runnable() {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
 
             @Override
             public void run() {

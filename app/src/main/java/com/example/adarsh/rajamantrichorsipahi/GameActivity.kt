@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -12,15 +13,20 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
 
-class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnClickListener {
+class GameActivity :
+    AppCompatActivity(),
+    Animation.AnimationListener,
+    View.OnClickListener {
     private var imageNumberClicked: Int? = 0
     private var assignedRandomNumber: Int? = 0
     private lateinit var scoreOne: TextView
@@ -108,21 +114,24 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
         isGameOver = false
     }
 
-    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { menuItem ->
+    private val mOnNavigationItemSelectedListener = NavigationBarView.OnItemSelectedListener { menuItem ->
         when (menuItem.itemId) {
             R.id.next_chance -> {
                 handleNextButtonClick()
-                return@OnNavigationItemSelectedListener true
+                return@OnItemSelectedListener true
             }
+
             R.id.winner -> {
                 handleWinnerButtonClick()
-                return@OnNavigationItemSelectedListener true
+                return@OnItemSelectedListener true
             }
+
             R.id.info -> {
                 navigationIntent = Intent(this@GameActivity, InfoActivity::class.java)
                 startActivity(intent)
-                return@OnNavigationItemSelectedListener true
+                return@OnItemSelectedListener true
             }
+
             R.id.share -> {
                 navigationIntent = Intent(android.content.Intent.ACTION_SEND).apply {
                     type = "text/plain"
@@ -131,15 +140,16 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     putExtra(Intent.EXTRA_TEXT, shareBody)
                 }
                 startActivity(Intent.createChooser(navigationIntent, "Share via"))
-                return@OnNavigationItemSelectedListener true
+                return@OnItemSelectedListener true
             }
+
             R.id.moreApps -> {
                 navigationIntent = Intent(Intent.ACTION_VIEW).apply {
                     data = Uri.parse("market://search?q=pub:adarshgumashta")
                 }
                 startActivity(navigationIntent)
 
-                return@OnNavigationItemSelectedListener true
+                return@OnItemSelectedListener true
             }
         }
         false
@@ -178,13 +188,11 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
             chit = 1
             isOnGoingChanceOver = false
             playerNumber = 0
-        }
-        else if (!isFirstChanceOver) {
+        } else if (!isFirstChanceOver) {
             upperToast.text = getString(R.string.please_complete_first_chance)
             upperToast.visibility = View.VISIBLE
             upperToast.startAnimation(animation)
-        }
-        else if (!isOnGoingChanceOver) {
+        } else if (!isOnGoingChanceOver) {
             upperToast.text = getString(R.string.please_complete_this_chance)
             upperToast.visibility = View.VISIBLE
             upperToast.startAnimation(animation)
@@ -192,13 +200,12 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
     }
 
     private fun handleWinnerButtonClick() {
-        if (isGameOver)
+        if (isGameOver) {
             showToast("Game is Already over .Please Exit !")
-        else {
+        } else {
             if (isOnGoingChanceOver) {
                 calculateFinalScores()
-            }
-            else {
+            } else {
                 showUpperToast(getString(R.string.please_complete_this_chance))
             }
         }
@@ -209,8 +216,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
             upperToast.text = getString(R.string.please_complete_first_chance)
             upperToast.visibility = View.VISIBLE
             upperToast.startAnimation(animation)
-        }
-        else {
+        } else {
             sumOne = calculateScoreLoop(score1ArrayList)
             sumTwo = calculateScoreLoop(score2ArrayList)
             sumThree = calculateScoreLoop(score3ArrayList)
@@ -228,47 +234,66 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                 menuItem2.isCheckable = false
                 isGameOver = true
             }
-            if (sumOne > sumTwo && sumOne > sumThree && sumOne > sumFour)
+            if (sumOne > sumTwo && sumOne > sumThree && sumOne > sumFour) {
                 showToast(playerOneName.text.toString() + " is Winner :) .Please Exit !")
-            else if (sumTwo > sumOne && sumTwo > sumThree && sumTwo > sumFour)
+            } else if (sumTwo > sumOne && sumTwo > sumThree && sumTwo > sumFour) {
                 showToast(playerTwoName.text.toString() + " is Winner :) .Please Exit !")
-            else if (sumThree > sumTwo && sumThree > sumOne && sumThree > sumFour)
+            } else if (sumThree > sumTwo && sumThree > sumOne && sumThree > sumFour) {
                 showToast(playerThreeName.text.toString() + " is Winner :) .Please Exit !")
-            else if (sumFour > sumTwo && sumFour > sumThree && sumFour > sumOne)
+            } else if (sumFour > sumTwo && sumFour > sumThree && sumFour > sumOne) {
                 showToast(playerFourName.text.toString() + " is Winner :) .Please Exit !")
-            else if (sumOne == sumTwo && sumTwo == sumThree && sumThree == sumFour) {
-                if (sumOne == sumTwo && sumTwo == sumThree && sumThree == sumFour && sumFour == 0)
+            } else if (sumOne == sumTwo && sumTwo == sumThree && sumThree == sumFour) {
+                if (sumOne == sumTwo && sumTwo == sumThree && sumThree == sumFour && sumFour == 0) {
                     showToast("None is winner in First Chance  , Please Start The Game")
-                else
-                    showToast(playerOneName.text.toString() + " , " + playerTwoName.text.toString() + " , " + playerThreeName.text.toString() + " & " + playerFourName.text.toString() + " are Winners:) .Please Exit !")
-            }
-            else if (sumOne == sumTwo && sumTwo == sumThree)
-                showToast(playerOneName.text.toString() + " , " + playerTwoName.text.toString() + " & " + playerThreeName.text.toString() + " are Winners:) .Please Exit !")
-            else if (sumOne == sumTwo && sumTwo == sumFour)
-                showToast(playerOneName.text.toString() + " , " + playerTwoName.text.toString() + " , " + " & " + playerFourName.text.toString() + " are Winners:) .Please Exit !")
-            else if (sumTwo == sumThree && sumThree == sumFour)
-                showToast(playerTwoName.text.toString() + " , " + playerThreeName.text.toString() + " & " + playerFourName.text.toString() + " are Winners:) .Please Exit !")
-            else if (sumOne == sumThree && sumThree == sumFour)
-                showToast(playerOneName.text.toString() + " , " + playerThreeName.text.toString() + " & " + playerFourName.text.toString() + " are Winners:) .Please Exit !")
-            else if (sumOne == sumTwo)
+                } else {
+                    showToast(
+                        playerOneName.text.toString() + " , " + playerTwoName.text.toString() + " , " + playerThreeName.text.toString() +
+                            " & " +
+                            playerFourName.text.toString() +
+                            " are Winners:) .Please Exit !",
+                    )
+                }
+            } else if (sumOne == sumTwo && sumTwo == sumThree) {
+                showToast(
+                    playerOneName.text.toString() + " , " + playerTwoName.text.toString() + " & " + playerThreeName.text.toString() +
+                        " are Winners:) .Please Exit !",
+                )
+            } else if (sumOne == sumTwo && sumTwo == sumFour) {
+                showToast(
+                    playerOneName.text.toString() + " , " + playerTwoName.text.toString() + " , " + " & " + playerFourName.text.toString() +
+                        " are Winners:) .Please Exit !",
+                )
+            } else if (sumTwo == sumThree && sumThree == sumFour) {
+                showToast(
+                    playerTwoName.text.toString() + " , " + playerThreeName.text.toString() + " & " + playerFourName.text.toString() +
+                        " are Winners:) .Please Exit !",
+                )
+            } else if (sumOne == sumThree && sumThree == sumFour) {
+                showToast(
+                    playerOneName.text.toString() + " , " + playerThreeName.text.toString() + " & " + playerFourName.text.toString() +
+                        " are Winners:) .Please Exit !",
+                )
+            } else if (sumOne == sumTwo) {
                 showToast(playerOneName.text.toString() + " & " + playerTwoName.text.toString() + " are Winners:) .Please Exit !")
-            else if (sumOne == sumThree)
+            } else if (sumOne == sumThree) {
                 showToast(playerOneName.text.toString() + " & " + playerThreeName.text.toString() + " are Winners:) .Please Exit !")
-            else if (sumOne == sumFour)
+            } else if (sumOne == sumFour) {
                 showToast(playerOneName.text.toString() + " & " + playerFourName.text.toString() + " are Winners:) .Please Exit !")
-            else if (sumTwo == sumThree)
+            } else if (sumTwo == sumThree) {
                 showToast(playerTwoName.text.toString() + " & " + playerThreeName.text.toString() + " are Winners:) .Please Exit !")
-            else if (sumTwo == sumFour)
+            } else if (sumTwo == sumFour) {
                 showToast(playerTwoName.text.toString() + " & " + playerFourName.text.toString() + " are Winners:) .Please Exit !")
-            else if (sumThree == sumFour)
+            } else if (sumThree == sumFour) {
                 showToast(playerThreeName.text.toString() + " & " + playerFourName.text.toString() + " are Winners:) .Please Exit !")
+            }
         }
     }
 
     private fun calculateScoreLoop(scoreArrayList: ArrayList<Int>): Int {
         var finalScore = 0
-        for (score in scoreArrayList)
+        for (score in scoreArrayList) {
             finalScore += score
+        }
         return finalScore
     }
 
@@ -279,6 +304,14 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
         initializeViews()
         setCustomFont(customFont)
         setPlayerNames(intent)
+        onBackPressedDispatcher.addCallback(
+            this,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    handleBackPress()
+                }
+            },
+        )
     }
 
     private fun initializeViews() {
@@ -305,9 +338,11 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
         decorView = window.decorView
         adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
-        bottomNavigationBar.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        val uiOptions = (View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE)
+        bottomNavigationBar.setOnItemSelectedListener(mOnNavigationItemSelectedListener)
+        val uiOptions = (
+            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE
+            )
         decorView.systemUiVisibility = uiOptions
         animation = AnimationUtils.loadAnimation(applicationContext, R.anim.slide_left)
         animation.setAnimationListener(this)
@@ -351,9 +386,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
         shuffleButton.typeface = customFont
     }
 
-    private fun generateRandomNumber(): Int {
-        return random.nextInt(4 - 0) + 0
-    }
+    private fun generateRandomNumber(): Int = random.nextInt(4 - 0) + 0
 
     private fun showUpperToast(message: String) {
         upperToast.setText(message)
@@ -361,7 +394,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
         upperToast.startAnimation(animation)
     }
 
-    override fun onBackPressed() {
+    private fun handleBackPress() {
         if (doubleBackToExitPressedOnce) {
             finish()
             moveTaskToBack(true)
@@ -371,7 +404,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
         upperToast.setText(R.string.press_again_to_exit)
         upperToast.visibility = View.VISIBLE
         upperToast.startAnimation(animation)
-        Handler().postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
+        Handler(Looper.getMainLooper()).postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
     }
 
     private fun getWhoseTurn(i: Int) {
@@ -394,70 +427,85 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                         imageOne.setImageResource(R.drawable.zero)
                         imageOne.tag = "R.drawable.zero"
                     }
+
                     1 -> {
                         imageOne.setImageResource(R.drawable.one)
                         imageOne.tag = "R.drawable.one"
                     }
+
                     2 -> {
                         imageOne.setImageResource(R.drawable.two)
                         imageOne.tag = "R.drawable.two"
                     }
+
                     3 -> {
                         imageOne.setImageResource(R.drawable.three)
                         imageOne.tag = "R.drawable.three"
                     }
                 }
+
             1 ->
                 when (assignedRandomNumber) {
                     0 -> {
                         imageTwo.setImageResource(R.drawable.zero)
                         imageTwo.tag = "R.drawable.zero"
                     }
+
                     1 -> {
                         imageTwo.setImageResource(R.drawable.one)
                         imageTwo.tag = "R.drawable.one"
                     }
+
                     2 -> {
                         imageTwo.setImageResource(R.drawable.two)
                         imageTwo.tag = "R.drawable.two"
                     }
+
                     3 -> {
                         imageTwo.setImageResource(R.drawable.three)
                         imageTwo.tag = "R.drawable.three"
                     }
                 }
+
             2 ->
                 when (assignedRandomNumber) {
                     0 -> {
                         imageThree.setImageResource(R.drawable.zero)
                         imageThree.tag = "R.drawable.zero"
                     }
+
                     1 -> {
                         imageThree.setImageResource(R.drawable.one)
                         imageThree.tag = "R.drawable.one"
                     }
+
                     2 -> {
                         imageThree.setImageResource(R.drawable.two)
                         imageThree.tag = "R.drawable.two"
                     }
+
                     3 -> {
                         imageThree.setImageResource(R.drawable.three)
                         imageThree.tag = "R.drawable.three"
                     }
                 }
+
             3 -> when (assignedRandomNumber) {
                 0 -> {
                     imageFour.setImageResource(R.drawable.zero)
                     imageFour.tag = "R.drawable.zero"
                 }
+
                 1 -> {
                     imageFour.setImageResource(R.drawable.one)
                     imageFour.tag = "R.drawable.one"
                 }
+
                 2 -> {
                     imageFour.setImageResource(R.drawable.two)
                     imageFour.tag = "R.drawable.two"
                 }
+
                 3 -> {
                     imageFour.setImageResource(R.drawable.three)
                     imageFour.tag = "R.drawable.three"
@@ -481,8 +529,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
         imageNumberClicked = 3
         if (chitFourAlreadyClicked) {
             showRemainingChitsToast(playerNumber)
-        }
-        else if (imageFour.tag.equals("R.drawable.podbrhalf")) {
+        } else if (imageFour.tag.equals("R.drawable.podbrhalf")) {
             if (fourthChitIs == 2) {
                 assignImageAfterGuess(R.string.guess_is_right, R.drawable.two, "R.drawable.two", imageFour)
                 if (firstChitIs == 3) {
@@ -493,8 +540,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                             3 -> scoreInSpecificChanceThree += 500
                             4 -> scoreInSpecificChanceFour += 500
                         }
-                    }
-                    else if (thirdChitIs == 1) {
+                    } else if (thirdChitIs == 1) {
                         when (playerNumberThreeTurn) {
                             1 -> scoreInSpecificChanceOne += 500
                             2 -> scoreInSpecificChanceTwo += 500
@@ -504,8 +550,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageOne.setImageResource(R.drawable.three)
                     imageOne.tag = "R.drawable.three"
-                }
-                else if (secondChitIs == 3) {
+                } else if (secondChitIs == 3) {
                     if (firstChitIs == 1) {
                         when (playerNumberOneTurn) {
                             1 -> scoreInSpecificChanceOne += 500
@@ -513,8 +558,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                             3 -> scoreInSpecificChanceThree += 500
                             4 -> scoreInSpecificChanceFour += 500
                         }
-                    }
-                    else if (thirdChitIs == 1) {
+                    } else if (thirdChitIs == 1) {
                         when (playerNumberThreeTurn) {
                             1 -> scoreInSpecificChanceOne += 500
                             2 -> scoreInSpecificChanceTwo += 500
@@ -524,8 +568,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageTwo.setImageResource(R.drawable.three)
                     imageTwo.tag = "R.drawable.three"
-                }
-                else if (thirdChitIs == 3) {
+                } else if (thirdChitIs == 3) {
                     if (firstChitIs == 1) {
                         when (playerNumberOneTurn) {
                             1 -> scoreInSpecificChanceOne += 500
@@ -533,8 +576,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                             3 -> scoreInSpecificChanceThree += 500
                             4 -> scoreInSpecificChanceFour += 500
                         }
-                    }
-                    else if (secondChitIs == 1) {
+                    } else if (secondChitIs == 1) {
                         when (playerNumberTwoTurn) {
                             1 -> scoreInSpecificChanceOne += 500
                             2 -> scoreInSpecificChanceTwo += 500
@@ -545,8 +587,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     imageThree.setImageResource(R.drawable.three)
                     imageThree.tag = "R.drawable.three"
                 }
-            }
-            else if (fourthChitIs == 3) {
+            } else if (fourthChitIs == 3) {
                 assignImageAfterGuess(R.string.guess_is_wrong, R.drawable.three, "R.drawable.three", imageFour)
                 if (firstChitIs == 2) {
                     when (playerNumberOneTurn) {
@@ -557,8 +598,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageOne.setImageResource(R.drawable.two)
                     imageOne.tag = "R.drawable.two"
-                }
-                else if (secondChitIs == 2) {
+                } else if (secondChitIs == 2) {
                     when (playerNumberThreeTurn) {
                         1 -> scoreInSpecificChanceOne += 500
                         2 -> scoreInSpecificChanceTwo += 500
@@ -567,8 +607,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageTwo.setImageResource(R.drawable.two)
                     imageTwo.tag = "R.drawable.two"
-                }
-                else if (fourthChitIs == 2) {
+                } else if (fourthChitIs == 2) {
                     when (playerNumberFourTurn) {
                         1 -> scoreInSpecificChanceOne += 500
                         2 -> scoreInSpecificChanceTwo += 500
@@ -580,11 +619,11 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                 }
             }
             proceedCalculationsAfterGuess()
-        }
-        else if (imageFour.tag.equals("R.drawable.podbrclosed")) {
+        } else if (imageFour.tag.equals("R.drawable.podbrclosed")) {
             assignedRandomNumber = generateRandomNumber()
-            while (randomNumberList.contains(assignedRandomNumber))
+            while (randomNumberList.contains(assignedRandomNumber)) {
                 assignedRandomNumber = generateRandomNumber()
+            }
             randomNumberList.add(assignedRandomNumber!!)
             setImageOfRajaMantriChorSipahi(assignedRandomNumber!!, imageNumberClicked!!)
             playerNumber++
@@ -597,14 +636,11 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     3 -> scoreInSpecificChanceThree += 1000
                     4 -> scoreInSpecificChanceFour += 1000
                 }
-            }
-            else if (imageFour.tag.equals("R.drawable.one")) {
+            } else if (imageFour.tag.equals("R.drawable.one")) {
                 fourthChitIs = 1
-            }
-            else if (imageFour.tag.equals("R.drawable.two")) {
+            } else if (imageFour.tag.equals("R.drawable.two")) {
                 fourthChitIs = 2
-            }
-            else if (imageFour.tag.equals("R.drawable.three")) {
+            } else if (imageFour.tag.equals("R.drawable.three")) {
                 fourthChitIs = 3
                 when (playerNumber) {
                     1 -> scoreInSpecificChanceOne += 250
@@ -623,8 +659,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
         imageNumberClicked = 2
         if (chitThreeAlreadyClicked) {
             showRemainingChitsToast(playerNumber)
-        }
-        else if (imageThree.tag.equals("R.drawable.podblhalf")) {
+        } else if (imageThree.tag.equals("R.drawable.podblhalf")) {
             if (thirdChitIs == 2) {
                 assignImageAfterGuess(R.string.guess_is_right, R.drawable.two, "R.drawable.two", imageThree)
                 if (firstChitIs == 3) {
@@ -635,8 +670,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                             3 -> scoreInSpecificChanceThree += 500
                             4 -> scoreInSpecificChanceFour += 500
                         }
-                    }
-                    else if (fourthChitIs == 1) {
+                    } else if (fourthChitIs == 1) {
                         when (playerNumberFourTurn) {
                             1 -> scoreInSpecificChanceOne += 500
                             2 -> scoreInSpecificChanceTwo += 500
@@ -646,8 +680,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageOne.setImageResource(R.drawable.three)
                     imageOne.tag = "R.drawable.three"
-                }
-                else if (secondChitIs == 3) {
+                } else if (secondChitIs == 3) {
                     if (firstChitIs == 1) {
                         when (playerNumberOneTurn) {
                             1 -> scoreInSpecificChanceOne += 500
@@ -655,8 +688,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                             3 -> scoreInSpecificChanceThree += 500
                             4 -> scoreInSpecificChanceFour += 500
                         }
-                    }
-                    else if (fourthChitIs == 1) {
+                    } else if (fourthChitIs == 1) {
                         when (playerNumberFourTurn) {
                             1 -> scoreInSpecificChanceOne += 500
                             2 -> scoreInSpecificChanceTwo += 500
@@ -666,8 +698,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageTwo.setImageResource(R.drawable.three)
                     imageTwo.tag = "R.drawable.three"
-                }
-                else if (fourthChitIs == 3) {
+                } else if (fourthChitIs == 3) {
                     if (firstChitIs == 1) {
                         when (playerNumberOneTurn) {
                             1 -> scoreInSpecificChanceOne += 500
@@ -675,8 +706,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                             3 -> scoreInSpecificChanceThree += 500
                             4 -> scoreInSpecificChanceFour += 500
                         }
-                    }
-                    else if (secondChitIs == 1) {
+                    } else if (secondChitIs == 1) {
                         when (playerNumberTwoTurn) {
                             1 -> scoreInSpecificChanceOne += 500
                             2 -> scoreInSpecificChanceTwo += 500
@@ -687,8 +717,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     imageFour.setImageResource(R.drawable.three)
                     imageFour.tag = "R.drawable.three"
                 }
-            }
-            else if (thirdChitIs == 3) {
+            } else if (thirdChitIs == 3) {
                 assignImageAfterGuess(R.string.guess_is_wrong, R.drawable.three, "R.drawable.three", imageThree)
                 if (firstChitIs == 2) {
                     when (playerNumberOneTurn) {
@@ -699,8 +728,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageOne.setImageResource(R.drawable.two)
                     imageOne.tag = "R.drawable.two"
-                }
-                else if (secondChitIs == 2) {
+                } else if (secondChitIs == 2) {
                     when (playerNumberTwoTurn) {
                         1 -> scoreInSpecificChanceOne += 500
                         2 -> scoreInSpecificChanceTwo += 500
@@ -709,8 +737,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageTwo.setImageResource(R.drawable.two)
                     imageTwo.tag = "R.drawable.two"
-                }
-                else if (thirdChitIs == 2) {
+                } else if (thirdChitIs == 2) {
                     when (playerNumberThreeTurn) {
                         1 -> scoreInSpecificChanceOne += 500
                         2 -> scoreInSpecificChanceTwo += 500
@@ -722,11 +749,11 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                 }
             }
             proceedCalculationsAfterGuess()
-        }
-        else if (imageThree.tag.equals("R.drawable.podblclosed")) {
+        } else if (imageThree.tag.equals("R.drawable.podblclosed")) {
             assignedRandomNumber = generateRandomNumber()
-            while (randomNumberList.contains(assignedRandomNumber))
+            while (randomNumberList.contains(assignedRandomNumber)) {
                 assignedRandomNumber = generateRandomNumber()
+            }
             randomNumberList.add(assignedRandomNumber!!)
             setImageOfRajaMantriChorSipahi(assignedRandomNumber!!, imageNumberClicked!!)
             playerNumber++
@@ -739,14 +766,11 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     3 -> scoreInSpecificChanceThree += 1000
                     4 -> scoreInSpecificChanceFour += 1000
                 }
-            }
-            else if (imageThree.tag.equals("R.drawable.one")) {
+            } else if (imageThree.tag.equals("R.drawable.one")) {
                 thirdChitIs = 1
-            }
-            else if (imageThree.tag.equals("R.drawable.two")) {
+            } else if (imageThree.tag.equals("R.drawable.two")) {
                 thirdChitIs = 2
-            }
-            else if (imageThree.tag.equals("R.drawable.three")) {
+            } else if (imageThree.tag.equals("R.drawable.three")) {
                 thirdChitIs = 3
                 when (playerNumber) {
                     1 -> scoreInSpecificChanceOne += 250
@@ -765,8 +789,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
         imageNumberClicked = 1
         if (chitTwoAlreadyClicked) {
             showRemainingChitsToast(playerNumber)
-        }
-        else if (imageTwo.tag.equals("R.drawable.podtrhalf")) {
+        } else if (imageTwo.tag.equals("R.drawable.podtrhalf")) {
             if (secondChitIs == 2) {
                 assignImageAfterGuess(R.string.guess_is_right, R.drawable.two, "R.drawable.two", imageTwo)
                 if (firstChitIs == 3) {
@@ -777,8 +800,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                             3 -> scoreInSpecificChanceThree += 500
                             4 -> scoreInSpecificChanceFour += 500
                         }
-                    }
-                    else if (fourthChitIs == 1) {
+                    } else if (fourthChitIs == 1) {
                         when (playerNumberFourTurn) {
                             1 -> scoreInSpecificChanceOne += 500
                             2 -> scoreInSpecificChanceTwo += 500
@@ -788,8 +810,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageOne.setImageResource(R.drawable.three)
                     imageOne.tag = "R.drawable.three"
-                }
-                else if (thirdChitIs == 3) {
+                } else if (thirdChitIs == 3) {
                     if (firstChitIs == 1) {
                         when (playerNumberOneTurn) {
                             1 -> scoreInSpecificChanceOne += 500
@@ -797,8 +818,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                             3 -> scoreInSpecificChanceThree += 500
                             4 -> scoreInSpecificChanceFour += 500
                         }
-                    }
-                    else if (fourthChitIs == 1) {
+                    } else if (fourthChitIs == 1) {
                         when (playerNumberFourTurn) {
                             1 -> scoreInSpecificChanceOne += 500
                             2 -> scoreInSpecificChanceTwo += 500
@@ -808,8 +828,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageThree.setImageResource(R.drawable.three)
                     imageThree.tag = "R.drawable.three"
-                }
-                else if (fourthChitIs == 3) {
+                } else if (fourthChitIs == 3) {
                     if (firstChitIs == 1) {
                         when (playerNumberOneTurn) {
                             1 -> scoreInSpecificChanceOne += 500
@@ -817,8 +836,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                             3 -> scoreInSpecificChanceThree += 500
                             4 -> scoreInSpecificChanceFour += 500
                         }
-                    }
-                    else if (thirdChitIs == 1) {
+                    } else if (thirdChitIs == 1) {
                         when (playerNumberThreeTurn) {
                             1 -> scoreInSpecificChanceOne += 500
                             2 -> scoreInSpecificChanceTwo += 500
@@ -829,8 +847,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     imageFour.setImageResource(R.drawable.three)
                     imageFour.tag = "R.drawable.three"
                 }
-            }
-            else if (secondChitIs == 3) {
+            } else if (secondChitIs == 3) {
                 assignImageAfterGuess(R.string.guess_is_wrong, R.drawable.three, "R.drawable.three", imageTwo)
                 if (firstChitIs == 2) {
                     when (playerNumberOneTurn) {
@@ -841,8 +858,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageOne.setImageResource(R.drawable.two)
                     imageOne.tag = "R.drawable.two"
-                }
-                else if (secondChitIs == 2) {
+                } else if (secondChitIs == 2) {
                     when (playerNumberThreeTurn) {
                         1 -> scoreInSpecificChanceOne += 500
                         2 -> scoreInSpecificChanceTwo += 500
@@ -851,8 +867,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageTwo.setImageResource(R.drawable.two)
                     imageTwo.tag = "R.drawable.two"
-                }
-                else if (fourthChitIs == 2) {
+                } else if (fourthChitIs == 2) {
                     when (playerNumberFourTurn) {
                         1 -> scoreInSpecificChanceOne += 500
                         2 -> scoreInSpecificChanceTwo += 500
@@ -864,11 +879,11 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                 }
             }
             proceedCalculationsAfterGuess()
-        }
-        else if (imageTwo.tag.equals("R.drawable.podtrclosed")) {
+        } else if (imageTwo.tag.equals("R.drawable.podtrclosed")) {
             assignedRandomNumber = generateRandomNumber()
-            while (randomNumberList.contains(assignedRandomNumber))
+            while (randomNumberList.contains(assignedRandomNumber)) {
                 assignedRandomNumber = generateRandomNumber()
+            }
             randomNumberList.add(assignedRandomNumber!!)
             setImageOfRajaMantriChorSipahi(assignedRandomNumber!!, imageNumberClicked!!)
             playerNumber++
@@ -881,14 +896,11 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     3 -> scoreInSpecificChanceThree += 1000
                     4 -> scoreInSpecificChanceFour += 1000
                 }
-            }
-            else if (imageTwo.tag.equals("R.drawable.one")) {
+            } else if (imageTwo.tag.equals("R.drawable.one")) {
                 secondChitIs = 1
-            }
-            else if (imageTwo.tag.equals("R.drawable.two")) {
+            } else if (imageTwo.tag.equals("R.drawable.two")) {
                 secondChitIs = 2
-            }
-            else if (imageTwo.tag.equals("R.drawable.three")) {
+            } else if (imageTwo.tag.equals("R.drawable.three")) {
                 secondChitIs = 3
                 when (playerNumber) {
                     1 -> scoreInSpecificChanceOne += 250
@@ -907,8 +919,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
         imageNumberClicked = 0
         if (chitOneAlreadyClicked) {
             showRemainingChitsToast(playerNumber)
-        }
-        else if (imageOne.tag.equals("R.drawable.podtlhalf")) {
+        } else if (imageOne.tag.equals("R.drawable.podtlhalf")) {
             if (firstChitIs == 2) {
                 assignImageAfterGuess(R.string.guess_is_right, R.drawable.two, "R.drawable.two", imageOne)
                 if (secondChitIs == 3) {
@@ -919,8 +930,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                             3 -> scoreInSpecificChanceThree += 500
                             4 -> scoreInSpecificChanceFour += 500
                         }
-                    }
-                    else if (fourthChitIs == 1) {
+                    } else if (fourthChitIs == 1) {
                         when (playerNumberFourTurn) {
                             1 -> scoreInSpecificChanceOne += 500
                             2 -> scoreInSpecificChanceTwo += 500
@@ -930,8 +940,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageTwo.setImageResource(R.drawable.three)
                     imageTwo.tag = "R.drawable.three"
-                }
-                else if (thirdChitIs == 3) {
+                } else if (thirdChitIs == 3) {
                     if (secondChitIs == 1) {
                         when (playerNumberTwoTurn) {
                             1 -> scoreInSpecificChanceOne += 500
@@ -939,8 +948,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                             3 -> scoreInSpecificChanceThree += 500
                             4 -> scoreInSpecificChanceFour += 500
                         }
-                    }
-                    else if (fourthChitIs == 1) {
+                    } else if (fourthChitIs == 1) {
                         when (playerNumberFourTurn) {
                             1 -> scoreInSpecificChanceOne += 500
                             2 -> scoreInSpecificChanceTwo += 500
@@ -950,8 +958,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageThree.setImageResource(R.drawable.three)
                     imageThree.tag = "R.drawable.three"
-                }
-                else if (fourthChitIs == 3) {
+                } else if (fourthChitIs == 3) {
                     if (secondChitIs == 1) {
                         when (playerNumberTwoTurn) {
                             1 -> scoreInSpecificChanceOne += 500
@@ -959,8 +966,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                             3 -> scoreInSpecificChanceThree += 500
                             4 -> scoreInSpecificChanceFour += 500
                         }
-                    }
-                    else if (thirdChitIs == 1) {
+                    } else if (thirdChitIs == 1) {
                         when (playerNumberFourTurn) {
                             1 -> scoreInSpecificChanceOne += 500
                             2 -> scoreInSpecificChanceTwo += 500
@@ -971,8 +977,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     imageFour.setImageResource(R.drawable.three)
                     imageFour.tag = "R.drawable.three"
                 }
-            }
-            else if (firstChitIs == 3) {
+            } else if (firstChitIs == 3) {
                 assignImageAfterGuess(R.string.guess_is_wrong, R.drawable.three, "R.drawable.three", imageOne)
                 if (secondChitIs == 2) {
                     when (playerNumberTwoTurn) {
@@ -983,8 +988,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageTwo.setImageResource(R.drawable.two)
                     imageTwo.tag = "R.drawable.two"
-                }
-                else if (thirdChitIs == 2) {
+                } else if (thirdChitIs == 2) {
                     when (playerNumberThreeTurn) {
                         1 -> scoreInSpecificChanceOne += 500
                         2 -> scoreInSpecificChanceTwo += 500
@@ -993,8 +997,7 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     }
                     imageThree.setImageResource(R.drawable.two)
                     imageThree.tag = "R.drawable.two"
-                }
-                else if (fourthChitIs == 2) {
+                } else if (fourthChitIs == 2) {
                     when (playerNumberFourTurn) {
                         1 -> scoreInSpecificChanceOne += 500
                         2 -> scoreInSpecificChanceTwo += 500
@@ -1006,11 +1009,11 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                 }
             }
             proceedCalculationsAfterGuess()
-        }
-        else if (imageOne.tag.equals("R.drawable.podtlclosed")) {
+        } else if (imageOne.tag.equals("R.drawable.podtlclosed")) {
             assignedRandomNumber = generateRandomNumber()
-            while (randomNumberList.contains(assignedRandomNumber))
+            while (randomNumberList.contains(assignedRandomNumber)) {
                 assignedRandomNumber = generateRandomNumber()
+            }
             randomNumberList.add(assignedRandomNumber!!)
             setImageOfRajaMantriChorSipahi(assignedRandomNumber!!, imageNumberClicked!!)
             playerNumber++
@@ -1023,14 +1026,11 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                     3 -> scoreInSpecificChanceThree += 1000
                     4 -> scoreInSpecificChanceFour += 1000
                 }
-            }
-            else if (imageOne.tag.equals("R.drawable.one")) {
+            } else if (imageOne.tag.equals("R.drawable.one")) {
                 firstChitIs = 1
-            }
-            else if (imageOne.tag.equals("R.drawable.two")) {
+            } else if (imageOne.tag.equals("R.drawable.two")) {
                 firstChitIs = 2
-            }
-            else if (imageOne.tag.equals("R.drawable.three")) {
+            } else if (imageOne.tag.equals("R.drawable.three")) {
                 firstChitIs = 3
                 when (playerNumber) {
                     1 -> scoreInSpecificChanceOne += 250
@@ -1044,9 +1044,15 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
         }
     }
 
-    private fun performCloseChitFunction(imageView: ImageView, playerNumber: Int, drawableToBeSet: Int, drawableTag: String, chitNumberToBeClosed: Int) {
+    private fun performCloseChitFunction(
+        imageView: ImageView,
+        playerNumber: Int,
+        drawableToBeSet: Int,
+        drawableTag: String,
+        chitNumberToBeClosed: Int,
+    ) {
         try {
-            Handler().postDelayed({
+            Handler(Looper.getMainLooper()).postDelayed({
                 imageView.setImageResource(drawableToBeSet)
                 imageView.tag = drawableTag
                 when (playerNumber) {
@@ -1056,18 +1062,21 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                         3 -> thirdChitPlayerName.text = playerOneName.text
                         4 -> fourthChitPlayerName.text = playerOneName.text
                     }
+
                     2 -> when (chitNumberToBeClosed) {
                         1 -> firstChitPlayerName.text = playerTwoName.text
                         2 -> secondChitPlayerName.text = playerTwoName.text
                         3 -> thirdChitPlayerName.text = playerTwoName.text
                         4 -> fourthChitPlayerName.text = playerTwoName.text
                     }
+
                     3 -> when (chitNumberToBeClosed) {
                         1 -> firstChitPlayerName.text = playerThreeName.text
                         2 -> secondChitPlayerName.text = playerThreeName.text
                         3 -> thirdChitPlayerName.text = playerThreeName.text
                         4 -> fourthChitPlayerName.text = playerThreeName.text
                     }
+
                     4 -> when (chitNumberToBeClosed) {
                         1 -> firstChitPlayerName.text = playerFourName.text
                         2 -> secondChitPlayerName.text = playerFourName.text
@@ -1079,7 +1088,6 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
                 chit = 1
             }, 1500)
         } catch (e: Exception) {
-
         }
     }
 
@@ -1132,16 +1140,14 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
 
     private fun handleShuffleButtonClick() {
         isClickedOnShuffle = true
-        if (shuffleButton.text.equals("Shuffle") || playerNumber == 4 && !isOnGoingChanceOver) {
+        if (shuffleButton.text.equals("Shuffle") || (playerNumber == 4 && !isOnGoingChanceOver)) {
             if (chit == 1) {
                 handleShuffleClick()
-            }
-            else if (!isFirstChanceOver) {
+            } else if (!isFirstChanceOver) {
                 upperToast.text = getString(R.string.please_complete_first_chance)
                 upperToast.visibility = View.VISIBLE
                 upperToast.startAnimation(animation)
-            }
-            else {
+            } else {
                 upperToast.text = getString(R.string.click_on_next_chance_or_winner)
                 upperToast.visibility = View.VISIBLE
                 upperToast.startAnimation(animation)
@@ -1203,8 +1209,10 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
         whoWillFindChor(secondChitIs, playerNumberTwoTurn)
         whoWillFindChor(thirdChitIs, playerNumberThreeTurn)
         whoWillFindChor(fourthChitIs, playerNumberFourTurn)
-        if (imageOne.tag.equals("R.drawable.podopen")
-                || imageTwo.tag.equals("R.drawable.podopen") || imageTwo.tag.equals("R.drawable.podopen") || imageFour.tag.equals("R.drawable.podopen")) {
+        if (imageOne.tag.equals("R.drawable.podopen") ||
+            imageTwo.tag.equals("R.drawable.podopen") || imageTwo.tag.equals("R.drawable.podopen") ||
+            imageFour.tag.equals("R.drawable.podopen")
+        ) {
             if (playerNumber == 0) {
                 getWhoseTurn(playerNumber)
             }
@@ -1232,7 +1240,6 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
     }
 
     override fun onAnimationStart(p0: Animation?) {
-
     }
 
     override fun onAnimationEnd(p0: Animation?) {
@@ -1240,5 +1247,4 @@ class GameActivity : AppCompatActivity(), Animation.AnimationListener, View.OnCl
 
     override fun onAnimationRepeat(p0: Animation?) {
     }
-
 }
