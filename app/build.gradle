@@ -22,9 +22,9 @@ android {
 
     defaultConfig {
         applicationId "com.chit.adarsh.rajamantrichorsipahi"
-        minSdk 24
+        minSdk 23
         targetSdk 36
-        versionCode 10
+        versionCode 12
         versionName "1.0"
     }
 
